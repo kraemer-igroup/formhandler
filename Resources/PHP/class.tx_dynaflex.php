@@ -33,7 +33,7 @@ class tx_dynaflex_formhandler {
 	function addFields_predefinedJS($config) {
 		$newRecord = 'true';
 		if ($config['row']['pi_flexform'] != '') {
-			$flexData = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($config['row']['pi_flexform']);
+			$flexData = $config['row']['pi_flexform'];
 			if (isset($flexData['data']['sDEF']['lDEF']['predefined'])) {
 				$newRecord = 'false';
 			}
@@ -77,15 +77,12 @@ class tx_dynaflex_formhandler {
 
 		global $LANG;
 		
-		$pid = $config['row']['pid'];
-		if($pid < 0) {
-			$contentUid = str_replace('-','',$pid);
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('pid','tt_content','uid='.$contentUid);
-			if($res) {
-				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				$pid = $row['pid'];
-				$GLOBALS['TYPO3_DB']->sql_free_result($res);
-			}
+		$contentUid = $config['row']['uid'];
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('pid','tt_content','uid='.$contentUid);
+		if($res) {
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$pid = $row['pid'];
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 		$ts = $this->loadTS($pid);
 		
